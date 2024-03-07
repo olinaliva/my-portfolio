@@ -1,3 +1,6 @@
+<svelte:head>
+	<title>Contact me</title>
+</svelte:head>
 <h1>Contact me :)</h1>
 
     <form action="mailto:lolina@mit.edu" method="POST" enctype="text/plain">
