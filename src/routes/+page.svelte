@@ -25,7 +25,7 @@ width="300" height="400">
             <dl>
                 <dt>Followers</dt>
                 <dd>{ JSON.stringify(data.followers) }</dd>
-                <dt>following</dt>
+                <dt>Following</dt>
                 <dd>{ JSON.stringify(data.following) }</dd>
             </dl>
         </section>

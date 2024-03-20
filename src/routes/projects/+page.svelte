@@ -1,6 +1,47 @@
 <script>
     import projects from '$lib/projects.json';
     import Project from "$lib/Project.svelte";
+    import Pie from '$lib/Pie.svelte';
+    import * as d3 from 'd3';
+
+    let query = "";
+    // let filteredProjects;
+    // $: filteredProjects = projects.filter(project => {
+    //     if (query) {
+    //         return project.title.toLowerCase().includes(query.toLowerCase());
+    //     }
+
+    //     return true;
+    // });
+    filteredProjects=projects;
+    $: filteredProjects = projects.filter(project => {
+	let values = Object.values(project).join("\n").toLowerCase();
+	return values.includes(query.toLowerCase());
+    // it filters and then shows the first # of projects where # is # of filtered projects
+});
+
+let pieData;
+$: {
+pieData = {};
+let rolledData = d3.rollups(filteredProjects, v => v.length, d => d.year);
+pieData = rolledData.map(([year, count]) => {
+	return { value: count, label: year };
+});
+}
+
+let selectedYearIndex = -1;
+let selectedYear;
+let filteredByYear;
+$: {selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+
+filteredByYear = filteredProjects.filter(project => {
+	if (selectedYear) {
+		return project.year === selectedYear;
+	}
+    return true;
+});
+}
+
 </script>
 
 <svelte:head>
@@ -10,9 +51,14 @@
 <!-- <pre>{ JSON.stringify(projects, null, "\t") }</pre> -->
 
 <h1>{ projects.length } Projects</h1>
+
+<Pie data={pieData} bind:selectedIndex={selectedYearIndex}/>
+
+<input type="search" bind:value={query}
+       aria-label="Search projects" placeholder="🔍 Search projects…" />
+
     <div class="projects">
-        <!-- works withoutt #each but internal error with each? -->
-        {#each projects as p}
+        {#each filteredByYear as p}
         <Project info={p} />
         {/each}
 
