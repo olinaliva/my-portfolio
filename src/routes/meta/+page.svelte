@@ -117,7 +117,12 @@
     $: hasSelection = brushSelection && selectedCommits.length > 0; 
 
     $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(d => d.lines);
-    $: languageBreakdown = d3.rollups(selectedLines, v => d3.max(v, v => v.line), d => d.language);
+    $: languageBreakdown = d3.rollups(selectedLines, v=>v.length, d => d.type );
+    //$: languageBreakdown = d3.rollups(selectedLines, d => d.language );
+    
+    import Pie from "$lib/Pie.svelte";
+    let langLines;
+    $: langLines = Array.from(languageBreakdown).map(([language, lines]) => ({label: language, value: lines}));
 
 </script>
 
@@ -159,7 +164,8 @@
                     hoveredIndex = index;
                     cursor = {x: evt.x, y: evt.y};
                 }}
-                class:selected={isCommitSelected(index)}
+                
+                class:selected={isCommitSelected(commit)}
             />
         {/each}
         </g>
@@ -181,8 +187,11 @@
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
 {#each languageBreakdown as [language, lines] }
-	<p>{language}:{lines}</p>
+	<p>{language}:{d3.format(".1~%")(lines/selectedLines.length)}</p>
 {/each}
+
+<Pie data={langLines} />
+
 
 
 <style>
