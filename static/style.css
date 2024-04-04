@@ -110,3 +110,10 @@ h1, h2, h3, h4, h5, h6 {
 /* input,textarea, button, select{
     massing around with font?
 } */
+
+.stats{
+    font-family: "Lucida Console", "Courier New", monospace;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+
+}

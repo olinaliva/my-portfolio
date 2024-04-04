@@ -22,7 +22,7 @@ width="300" height="400">
 	{:then data}
         <section>
             <h2>Github stats</h2>
-            <dl>
+            <dl class="stats">
                 <dt>Followers</dt>
                 <dd>{ JSON.stringify(data.followers) }</dd>
                 <dt>Following</dt>
